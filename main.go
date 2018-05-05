@@ -52,8 +52,6 @@ func (u Messages) Less(i, j int) bool {
 	return u[i].Rating > u[j].Rating
 }
 
-const TOP = 20
-
 var (
 	api               *slack.Client
 	botKey            Token
@@ -77,7 +75,7 @@ func handleBotCommands(c chan AttachmentChannel) {
 		log.Println("[DEBUG] received command", commandArray)
 		switch commandArray[1] {
 		case "help":
-			attachmentChannel.DisplayTitle = "Fellbot"
+			attachmentChannel.DisplayTitle = "Tömat Vörben"
 			fields := make([]slack.AttachmentField, 0)
 			for k, v := range commands {
 				fields = append(fields, slack.AttachmentField{
@@ -106,7 +104,8 @@ func handleBotCommands(c chan AttachmentChannel) {
 			attachment := &slack.Attachment{
 				Pretext: "Who am i?",
 				Color:   "#0a84c1",
-				Fields:  fields,
+				// ImageURL: "https://lh3.googleusercontent.com/-Cyv9swstRns/Wu48DXCY_8I/AAAAAAAAiVE/U-mpXFbQGxwD1hvl3gnpbd-kHC861yhzwCK8BGAs/s386/2018-05-05.jpg",
+				Fields: fields,
 			}
 
 			attachmentChannel.Attachment = attachment
@@ -157,8 +156,9 @@ Loop:
 		case msg := <-rtm.IncomingEvents:
 			switch ev := msg.Data.(type) {
 			case *slack.ConnectedEvent:
-				log.Println("connected")
 				botId = ev.Info.User.ID
+				log.Println(ev.Info.User)
+				log.Println("connected", botId)
 			case *slack.TeamJoinEvent:
 				log.Println("Team join event")
 			case *slack.MessageEvent:
